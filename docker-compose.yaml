@@ -8,7 +8,7 @@ services:
       ZOOKEEPER_CLIENT_PORT: 2181
     volumes:
       - ./log/zookeeper/data:/var/lib/zookeeper/data
-      - .log/zookeeper/log:/var/lib/zookeeper/log
+      - ./log/zookeeper/log:/var/lib/zookeeper/log
     networks:
       - kafka_cluster_network
   broker:
@@ -19,7 +19,7 @@ services:
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker:9092
     volumes:
-      - ./log/broker:/var/lib/kafka/data/
+      - ./log/broker/data:/var/lib/kafka/data
     networks:
         - kafka_cluster_network
     depends_on:
