@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    container_name: zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+    volumes:
+      - ./log/zookeeper/data:/var/lib/zookeeper/data
+      - .log/zookeeper/log:/var/lib/zookeeper/log
+    networks:
+      - kafka_network
+
+networks:
+  kafka_network:
+    driver: bridge
