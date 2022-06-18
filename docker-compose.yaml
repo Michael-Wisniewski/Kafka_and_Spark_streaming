@@ -10,8 +10,21 @@ services:
       - ./log/zookeeper/data:/var/lib/zookeeper/data
       - .log/zookeeper/log:/var/lib/zookeeper/log
     networks:
-      - kafka_network
+      - kafka_cluster_network
+  broker:
+    image: confluentinc/cp-kafka:latest
+    container_name: broker
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker:9092
+    volumes:
+      - ./log/broker:/var/lib/kafka/data/
+    networks:
+        - kafka_cluster_network
+    depends_on:
+      - zookeeper
 
 networks:
-  kafka_network:
+  kafka_cluster_network:
     driver: bridge
