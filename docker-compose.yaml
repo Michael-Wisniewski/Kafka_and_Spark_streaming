@@ -41,8 +41,7 @@ services:
               /bin/kafka-topics --create --if-not-exists --topic test-topic \
               --bootstrap-server broker:9092 --partitions 1 --replication-factor 1 && \
               echo List of topics was synchronized - OK'"
-    
-
+              
 networks:
   kafka_cluster_network:
     driver: bridge
