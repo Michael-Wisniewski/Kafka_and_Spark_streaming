@@ -17,10 +17,9 @@ services:
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker:9092,PLAINTEXT_HOST://localhost:29092
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
-      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
-      
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker:9092 #,PLAINTEXT_HOST://localhost:29092
+      # KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      # KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
     volumes:
       - ./log/broker/data:/var/lib/kafka/data
     networks:
@@ -32,15 +31,16 @@ services:
     image: confluentinc/cp-kafka:latest
     container_name: broker-setup
     environment:
-      # The following settings are listed here only to satisfy the image's requirements.
-      # We override the image's `command` anyways, hence this container will not start a broker.
       KAFKA_BROKER_ID: ignored
       KAFKA_ZOOKEEPER_CONNECT: ignored
-    command: bash -c '/bin/kafka-topics --create --topic my-first-kafka-topic --bootstrap-server broker:9092 --partitions 1 --replication-factor 1'
     depends_on:
       - broker
     networks:
         - kafka_cluster_network
+    command: "bash -c 'echo Waiting for Kafka broker to be ready... && \
+              /bin/kafka-topics --create --if-not-exists --topic test-topic \
+              --bootstrap-server broker:9092 --partitions 1 --replication-factor 1 && \
+              echo List of topics was synchronized - OK'"
     
 
 networks:
