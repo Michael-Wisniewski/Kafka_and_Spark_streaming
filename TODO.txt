@@ -1,0 +1,1 @@
+- utworzenie topic w producencie jeżeli jeszcze go nie ma na liście
