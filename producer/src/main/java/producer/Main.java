@@ -1,19 +1,20 @@
 package producer;
 
-//import org.apache.logging.log4j.LogManager;
-//import org.apache.logging.log4j.Logger;
+
 
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.serialization.IntegerSerializer;
 import org.apache.kafka.common.serialization.StringSerializer;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
 public class Main {
-//    private static final Logger logger = LogManager.getLogger();
+    private static final Logger logger =   LogManager.getLogger();
     private static void wait(int ms)
     {
         try
@@ -28,7 +29,7 @@ public class Main {
 
     public static void main(String[] args) {
         System.out.println("AAAAAAAAAAAAAAAAA");
-//        logger.info("Starting Kafka Producer...");
+        logger.info("Starting Kafka Producer...");
         Properties props = new Properties();
         props.put(ProducerConfig.CLIENT_ID_CONFIG, AppConfigs.applicationID);
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, AppConfigs.bootstrapServers);
