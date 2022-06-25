@@ -43,16 +43,16 @@ services:
   #             --bootstrap-server broker:9092 --partitions 1 --replication-factor 1 && \
   #             echo List of topics was synchronized - OK'"
 
-  producer:
-    image: openjdk:18
-    container_name: producer
-    depends_on:
-      - broker
-    volumes:
-      - ./producer/target:/usr/src/app/
-    networks:
-      - kafka_cluster_network
-    command: "java -jar /usr/src/app/producer.jar"
+  # producer:
+  #   image: openjdk:18
+  #   container_name: producer
+  #   depends_on:
+  #     - broker
+  #   volumes:
+  #     - ./producer/target:/usr/src/app/
+  #   networks:
+  #     - kafka_cluster_network
+  #   command: "java -jar /usr/src/app/producer.jar"
 
 
 networks:
