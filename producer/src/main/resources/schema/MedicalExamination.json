@@ -1,0 +1,20 @@
+{
+    "type": "object",
+    "javaType": "MedicalExamination",
+    "properties": {
+        "age": {"type": "integer"},
+        "sex": {"type": "integer"},
+        "cp": {"type": "integer"},
+        "trtbps": {"type": "integer"},
+        "chol": {"type": "integer"},
+        "fbs": {"type": "integer"},
+        "restecg": {"type": "integer"},
+        "thalachh": {"type": "integer"},
+        "exng": {"type": "integer"},
+        "oldpeak": {"type": "decimal"},
+        "slp": {"type": "integer"},
+        "caa": {"type": "integer"},
+        "thall": {"type": "integer"},
+        "output": {"type": "integer"}
+    }
+}

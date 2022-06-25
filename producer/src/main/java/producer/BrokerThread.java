@@ -1,12 +1,19 @@
 package producer;
 
+import com.opencsv.CSVReader;
+import com.opencsv.bean.CsvToBean;
+import com.opencsv.bean.CsvToBeanBuilder;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import producer.types.MedicalExamination;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.Future;
 
@@ -38,20 +45,60 @@ public class BrokerThread implements Runnable {
     @Override
     public void run() {
         logger.info("Start processing " + fileLocation);
-        File file = new File(fileLocation);
-        int counter = 0;
 
-        try(Scanner scanner = new Scanner(file)) {
-            while (scanner.hasNextLine()) {
+        try {
+            CSVReader csvReader = new CSVReader(new FileReader(fileLocation));
+            CsvToBean csvToBean = new CsvToBeanBuilder(csvReader)
+                    .withType(MedicalExamination.class)
+                    .withIgnoreLeadingWhiteSpace(true).build();
+
+            List medicalExaminations = csvToBean.parse();
+            csvReader.close();
+
+            int counter = 0;
+
+            for (Object medicalExamination : medicalExaminations) {
                 logger.info("Processing " + fileLocation + " - " + counter);
-                String line = scanner.nextLine();
-                producer.send(new ProducerRecord(topicName, null, line));
+
+                MedicalExamination medicalExaminationObj = (MedicalExamination) medicalExamination;
+                producer.send(new ProducerRecord(AppConfigs.topicName,null,medicalExaminationObj));
                 counter++;
                 wait(AppConfigs.messageMillisecondsDelay);
             }
             logger.info("Finished sending " + counter + " messages from " + fileLocation);
+
+
+//            try(Scanner scanner = new Scanner(file)) {
+//                while (scanner.hasNextLine()) {
+//                    logger.info("Processing " + fileLocation + " - " + counter);
+//                    String line = scanner.nextLine();
+//                    producer.send(new ProducerRecord(topicName, null, line));
+//                    counter++;
+//                    wait(AppConfigs.messageMillisecondsDelay);
+//                }
+//                logger.info("Finished sending " + counter + " messages from " + fileLocation);
+
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+
+
+//        File file = new File(fileLocation);
+//        int counter = 0;
+//
+//        try(Scanner scanner = new Scanner(file)) {
+//            while (scanner.hasNextLine()) {
+//                logger.info("Processing " + fileLocation + " - " + counter);
+//                String line = scanner.nextLine();
+//                producer.send(new ProducerRecord(topicName, null, line));
+//                counter++;
+//                wait(AppConfigs.messageMillisecondsDelay);
+//            }
+//            logger.info("Finished sending " + counter + " messages from " + fileLocation);
+//        } catch (FileNotFoundException e) {
+//            throw new RuntimeException(e);
+//        }
     }
 }
